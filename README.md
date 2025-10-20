@@ -57,7 +57,7 @@ npm install -g @github/copilot
 Alternatively, you can start a PowerShell session with a temporary bypass:
 
 ```powershell
-powershell -ExecutionPolicy Bypass
+powershell -ExecutionPolicy Bypass -Command "npm install -g @github/copilot"
 ```
 
 Or run the Windows command-shell shim directly without changing the policy:
