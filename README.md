@@ -44,6 +44,31 @@ Install globally with npm:
 npm install -g @github/copilot
 ```
 
+#### Windows PowerShell execution policy
+
+If you see `running scripts is disabled on this system` when running the `npm` command in PowerShell, update your execution
+policy for the current user before retrying the install:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+npm install -g @github/copilot
+```
+
+Alternatively, you can start a PowerShell session with a temporary bypass:
+
+```powershell
+powershell -ExecutionPolicy Bypass
+```
+
+Or run the Windows command-shell shim directly without changing the policy:
+
+```powershell
+& "C:\Program Files\nodejs\npm.cmd" install -g @github/copilot
+```
+
+See [about Execution Policies](https://go.microsoft.com/fwlink/?LinkID=135170) for more details about how PowerShell governs
+script execution.
+
 ### Launching the CLI
 
 ```bash
@@ -72,6 +97,45 @@ By default, `copilot` utilizes Claude Sonnet 4.5. Run the `/model` slash command
 Each time you submit a prompt to GitHub Copilot CLI, your monthly quota of premium requests is reduced by one. For information about premium requests, see [About premium requests](https://docs.github.com/copilot/managing-copilot/monitoring-usage-and-entitlements/about-premium-requests).
 
 For more information about how to use the GitHub Copilot CLI, see [our official documentation](https://docs.github.com/copilot/concepts/agents/about-copilot-cli).
+
+### Working with non-GitHub assistants
+
+The CLI is a thin shell around GitHub's Copilot coding agent, so you can choose
+from every model that the agent exposes — including GPT-5 and Claude Sonnet —
+without leaving your terminal. To switch between them, run `/model` inside a
+session and pick the assistant that best matches the task you're working on.
+
+If you maintain prompt libraries or research corpora outside GitHub, you can
+still bring that context into a CLI conversation. Use the `@` mention shortcut
+to attach any local file (text, Markdown, JSON, etc.) so the agent has the
+material you want it to reference while it plans or writes code. This makes it
+easy to reuse the same assets you would normally feed into ChatGPT or Claude.
+
+#### Example: referencing a Hugging Face dataset of prompts
+
+If you want to keep the curated prompts from the
+[`fka/awesome-chatgpt-prompts`](https://huggingface.co/datasets/fka/awesome-chatgpt-prompts)
+dataset close at hand, export them into a local note and attach that note in
+your Copilot CLI sessions:
+
+```bash
+pip install datasets
+
+python - <<'PY'
+from datasets import load_dataset
+
+dataset = load_dataset("fka/awesome-chatgpt-prompts")
+
+with open("awesome-chatgpt-prompts.md", "w", encoding="utf-8") as handle:
+    for row in dataset["train"]:
+        handle.write(f"### {row['act']}\n\n{row['prompt']}\n\n")
+PY
+```
+
+Once the file exists, launch `copilot` from the same directory and add the note
+to your message with `@awesome-chatgpt-prompts.md`. The agent will ingest the
+prompt catalog alongside your repository context so you can remix those ideas in
+your workflow.
 
 
 ## 📢 Feedback and Participation
