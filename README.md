@@ -63,7 +63,7 @@ powershell -ExecutionPolicy Bypass
 Or run the Windows command-shell shim directly without changing the policy:
 
 ```powershell
-& "C:\Program Files\nodejs\npm.cmd" install -g @github/copilot
+& (Get-Command npm).Source install -g @github/copilot
 ```
 
 See [about Execution Policies](https://go.microsoft.com/fwlink/?LinkID=135170) for more details about how PowerShell governs
